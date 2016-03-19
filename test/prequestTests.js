@@ -36,8 +36,25 @@ describe('Prequest GET tests', function () {
   it('should fail with unknown route', function (done) {
     prequest(url + '/unknown')
       .catch(function (err) {
+        assert(err instanceof Error, 'Err must be an actual error');
+        assert(err.message.indexOf('404') !== -1,
+          'Error message must include status');
+        assert(err.message.indexOf('Cannot GET') !== -1,
+          'Error message must include part of the response body');
+        assert(err.response.headers !== null,
+          'Error object must include the bad response');
         assert.equal(err.statusCode, 404, 'Unsuccessful Get');
         assert.strictEqual(err.body.trimRight(), 'Cannot GET /unknown');
+        done();
+      });
+  });
+
+
+  it('should fail with conn refused', function (done) {
+    prequest('http://nosuchserver')
+      .catch(function (err) {
+        assert(err instanceof Error, 'Err must be an actual error');
+        assert.equal(err.code, 'ENOTFOUND', 'No such server');
         done();
       });
   });

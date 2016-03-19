@@ -2,7 +2,27 @@
 
 var Promise = require('bluebird');
 var request = require('request');
+var util = require('util');
 var objectAssign = require('object-assign');
+
+function atMost(obj, max) {
+  var s = JSON.stringify(obj || 'null');
+  if ( s.length <= max ) {
+    return s;
+  }
+  return s.substring(0, max) + '...';
+}
+
+// HTTP specific error class
+function HttpError(statusCode, body, response) {
+  Error.captureStackTrace(this, this.constructor);
+  this.statusCode = statusCode;
+  this.body = body;
+  this.response = response;
+  this.message = 'HTTP ' + statusCode + ': ' + atMost(body, 60);
+}
+
+util.inherits(HttpError, Error);
 
 function prequest(url, options) {
   options = objectAssign({}, options);
@@ -20,7 +40,7 @@ function prequest(url, options) {
       if (error) {
         reject(error);
       } else if (response.statusCode >= 400) {
-        reject(response);
+        reject(new HttpError(response.statusCode, response.body, response));
       } else if (options.arrayResponse) {
         resolve([response, body]);
       } else {
