@@ -37,10 +37,9 @@ describe('Prequest GET tests', function () {
     prequest(url + '/unknown')
       .catch(function (err) {
         assert(err instanceof Error, 'Err must be an actual error');
-        assert(err.message.indexOf('404') !== -1,
-          'Error message must include status');
-        assert(err.message.indexOf('Cannot GET') !== -1,
-          'Error message must include part of the response body');
+        console.log(err.message);
+        assert.equal(err.message.trimRight(),
+          'HTTP 404: Cannot GET /unknown');
         assert(err.response.headers !== null,
           'Error object must include the bad response');
         assert.equal(err.statusCode, 404, 'Unsuccessful Get');

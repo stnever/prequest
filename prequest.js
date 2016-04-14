@@ -16,10 +16,13 @@ function atMost(obj, max) {
 // HTTP specific error class
 function HttpError(statusCode, body, response) {
   Error.captureStackTrace(this, this.constructor);
-  this.statusCode = statusCode;
-  this.body = body;
-  this.response = response;
-  this.message = 'HTTP ' + statusCode + ': ' + atMost(body, 60);
+  Object.defineProperty(this, 'statusCode',
+    {value: statusCode, enumerable: false});
+  Object.defineProperty(this, 'body',
+    {value: body, enumerable: false});
+  Object.defineProperty(this, 'response',
+    {value: response, enumerable: false});
+  this.message = 'HTTP ' + statusCode + ': ' + body;
 }
 
 util.inherits(HttpError, Error);
