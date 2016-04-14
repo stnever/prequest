@@ -20,6 +20,7 @@
   "author": "Alyssa Quek",
   "dependencies": {
     "bluebird": "^3.0.5",
+    "browser-request": "^0.3.3",
     "object-assign": "^2.1.1",
     "request": "^2.53.0"
   },
@@ -35,6 +36,9 @@
   },
   "engines": {
     "node": ">=0.10.0"
+  },
+  "browser": {
+    "request": "browser-request"
   },
   "license": "MIT"
 }
