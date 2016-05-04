@@ -22,7 +22,7 @@ function HttpError(statusCode, body, response) {
     {value: body, enumerable: false});
   Object.defineProperty(this, 'response',
     {value: response, enumerable: false});
-  this.message = 'HTTP ' + statusCode + ': ' + body;
+  this.message = 'HTTP ' + statusCode + ': ' + JSON.stringify(body);
 }
 
 util.inherits(HttpError, Error);
