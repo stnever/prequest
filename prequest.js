@@ -13,19 +13,17 @@ function atMost(obj, max) {
   return s.substring(0, max) + '...';
 }
 
-// HTTP specific error class
-function HttpError(statusCode, body, response) {
-  Error.captureStackTrace(this, this.constructor);
-  Object.defineProperty(this, 'statusCode',
-    {value: statusCode, enumerable: false});
-  Object.defineProperty(this, 'body',
-    {value: body, enumerable: false});
-  Object.defineProperty(this, 'response',
-    {value: response, enumerable: false});
-  this.message = 'HTTP ' + statusCode + ': ' + JSON.stringify(body);
+class HttpError extends Error {
+  constructor(code, body, response) {
+    super(`HTTP ${code}: ${atMost(body, 60)}`)
+    this.name = this.constructor.name
+    this.statusCode = code
+    this.body = body
+    this.response = response
+    Error.captureStackTrace(this, this.constructor)
+  }
 }
 
-util.inherits(HttpError, Error);
 
 function prequest(url, options) {
   options = objectAssign({}, options);
